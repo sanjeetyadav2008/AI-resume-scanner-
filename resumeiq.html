@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ResumeIQ – AI Resume Scanner & Job Match Analyzer</title>
+<style>
+:root{--navy:#0B1F3A;--navy2:#12315C;--blue:#0B7A55;--mint:#3EE0A5;--sky:#A7F3D0;--bg:#F1F5F9;--card:#fff;--text:#0F172A;--muted:#475569;--line:#CBD5E1;--ok:#166534;--okbg:#DCFCE7;--bad:#991B1B;--badbg:#FEE2E2;--warn:#854D0E;--warnbg:#FEF3C7;--note:#E3FBF1;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0A1424;--card:#10213B;--text:#E8EEF8;--muted:#B6C3D6;--line:#2C4166;--blue:#5CF0B8;--ok:#86EFAC;--okbg:#12361F;--bad:#FCA5A5;--badbg:#3F1717;--warn:#FDE68A;--warnbg:#3A2E0E;--note:#12294A}}
+:root[data-theme="dark"]{--bg:#0A1424;--card:#10213B;--text:#E8EEF8;--muted:#B6C3D6;--line:#2C4166;--blue:#5CF0B8;--ok:#86EFAC;--okbg:#12361F;--bad:#FCA5A5;--badbg:#3F1717;--warn:#FDE68A;--warnbg:#3A2E0E;--note:#12294A}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.55}
+.c{max-width:1040px;margin:0 auto;padding:0 18px}a{color:var(--blue)}:focus-visible{outline:3px solid #F59E0B;outline-offset:2px}
+.skip{position:absolute;left:-999px;top:6px;background:#fff;color:#000;padding:8px 12px;z-index:99}.skip:focus{left:6px}
+header{background:var(--navy)}header .c{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;min-height:58px}
+.brand{color:#fff;font-weight:700;font-size:1.2rem;text-decoration:none;margin-right:auto}.hb{background:transparent;color:#fff;border:1.5px solid var(--sky);border-radius:999px;padding:7px 14px;font:inherit;font-size:.9rem;cursor:pointer}.hb:hover{background:var(--navy2)}
+#menu{background:var(--navy2);border-top:1px solid #1E4A5E}#menu[hidden]{display:none}#menu .c{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;padding-top:12px;padding-bottom:14px}
+#menu a{color:#fff;text-decoration:none;padding:12px 14px;border-radius:10px;background:rgba(255,255,255,.07);font-weight:600}#menu a:hover{background:rgba(62,224,165,.22)}#menu a[aria-current]{background:var(--mint);color:#0B1F3A}
+.hero{background:linear-gradient(160deg,var(--navy),var(--navy2));color:#fff;padding:52px 0}.hero h1{font-size:clamp(1.7rem,4vw,2.5rem);line-height:1.2;margin:0 0 12px;max-width:700px}.hero p{color:#E2E8F0;max-width:660px}
+.btn{display:inline-block;background:var(--mint);color:#0B1F3A;border:2px solid var(--mint);font-weight:600;border-radius:10px;padding:10px 18px;font-size:1rem;cursor:pointer;text-decoration:none;margin:4px 6px 4px 0}
+.btn.s{background:transparent;color:var(--blue);border-color:var(--blue)}.btn.l{background:#fff;color:var(--navy);border-color:#fff}.btn:disabled{opacity:.5;cursor:not-allowed}
+main{padding:28px 0 40px}.page{display:none}.page.on{display:block}h2{margin-top:0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin:14px 0}
+.note{background:var(--note);border-left:4px solid var(--blue);padding:10px 14px;border-radius:6px}.fine{font-size:.875rem;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+label{display:block;font-weight:600;margin:10px 0 4px}input[type=text],input[type=number],select,textarea{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:8px;font:inherit;background:var(--card);color:var(--text)}textarea{min-height:110px}
+.chk{display:flex;gap:10px;align-items:flex-start;font-weight:400}.chk input{width:18px;height:18px;margin-top:5px}
+.drop{border:2px dashed var(--muted);border-radius:14px;padding:26px;text-align:center;background:var(--card)}.drop.off{opacity:.6}
+ul.files{list-style:none;padding:0}ul.files li{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;margin:10px 0}
+.badge{display:inline-block;font-weight:600;padding:2px 10px;border-radius:999px;font-size:.82rem;margin-right:6px}.ok{background:var(--okbg);color:var(--ok)}.bad{background:var(--badbg);color:var(--bad)}.warn{background:var(--warnbg);color:var(--warn)}.nb{background:var(--line);color:var(--text)}
+.big{font-size:3rem;font-weight:800;line-height:1;display:inline-block;margin-right:10px}
+.bar{height:12px;background:var(--line);border-radius:6px;overflow:hidden;min-width:80px}.bar i{display:block;height:100%;background:var(--blue)}
+.tw{overflow-x:auto}table{border-collapse:collapse;width:100%;min-width:640px;font-size:.92rem}th,td{border-bottom:1px solid var(--line);padding:8px;text-align:left;vertical-align:top}th{background:var(--note)}
+.prio{border-left:5px solid;padding:6px 12px;margin:8px 0;border-radius:4px;background:var(--card)}.p1{border-color:#DC2626}.p2{border-color:#D97706}.p3{border-color:#2563EB}
+pre{white-space:pre-wrap;background:var(--bg);border:1px solid var(--line);padding:8px;border-radius:8px;font-size:.85rem;max-height:240px;overflow:auto}
+footer{background:var(--navy);color:#E2E8F0;padding:22px 0;font-size:.9rem}footer a,footer button{color:var(--sky);background:none;border:0;font:inherit;text-decoration:underline;cursor:pointer;margin-right:14px;padding:0}
+#cb{position:fixed;left:14px;right:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));max-width:540px;background:var(--card);border:2px solid var(--navy);border-radius:14px;padding:16px;z-index:50}#cb[hidden]{display:none}
+@media print{header,footer,#cb,nav,.noprint,.skip{display:none!important}.page{display:none!important}#report{display:block!important}body{background:#fff;color:#000}.card{break-inside:avoid}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to main content</a>
+<header><div class="c"><a class="brand" href="#home">ResumeIQ</a>
+<button class="hb" id="th" type="button" aria-pressed="false">🌙 Night</button><button class="hb" id="mb" type="button" aria-expanded="false" aria-controls="menu">☰ Menu</button></div>
+<nav id="menu" aria-label="Main" hidden><div class="c"><a href="#upload">1. Upload</a><a href="#job">2. Job</a><a href="#results">3. Result</a><a href="#compare">4. Compare</a><a href="#report">5. Report</a><a href="#delete">6. Delete data</a></div></nav></header>
+
+<main id="main" tabindex="-1">
+<section class="page" id="home">
+<div class="hero"><div class="c"><h1>See how your resume matches the job you want</h1>
+<p>Upload a resume, pick a role or paste a job description, and get an <b>estimated resume-to-job match</b> with every score explained. It is not a prediction of whether you will be hired.</p>
+<a class="btn l" href="#upload">Analyze a resume</a>
+<p class="fine" style="color:var(--sky)">Free · no account · your files are processed in your browser and never uploaded</p></div></div>
+<div class="c"><div class="card"><h2>How it works</h2><ol><li><b>Upload</b> PDF or DOCX resumes (or paste text).</li><li><b>Choose</b> a role or paste a job description, then confirm the requirements.</li><li><b>Review</b> score breakdown, evidence, gaps, and suggested rewrites.</li></ol>
+<p class="note">A skill marked “not found” means the resume doesn’t show it, not that you lack it. Scores come from fixed, visible rules, so you can check them by hand.</p></div></div>
+</section>
+
+<section class="page c" id="upload"><h2>Upload resumes</h2>
+<p>PDF or DOCX, up to 5 MB each, up to 5 files. Text is extracted in your browser; nothing is sent anywhere.</p>
+<fieldset class="card"><legend><b>Before you start</b></legend>
+<label class="chk"><input type="checkbox" id="c1"> I am 18 or older. ResumeIQ is not intended for children.</label>
+<label class="chk"><input type="checkbox" id="c2"> I agree to this page processing my resume text locally in my browser, as described in the <a href="#privacy">privacy policy</a>.</label></fieldset>
+<div class="drop off" id="drop"><label for="fi" style="margin:0">Choose files or drag them here</label><input type="file" id="fi" accept=".pdf,.docx" multiple disabled><p class="fine" id="dh">Tick both boxes above to enable uploading.</p></div>
+<details class="card"><summary><b>Or paste resume text</b> (useful for scanned PDFs)</summary><label for="pt">Resume text</label><textarea id="pt"></textarea><label for="pn">Label</label><input type="text" id="pn" value="Pasted resume" maxlength="60"><button class="btn" id="pb" disabled>Add pasted text</button></details>
+<p id="st" class="fine" role="status" aria-live="polite"></p>
+<ul class="files" id="fl" aria-label="Resumes"></ul><p id="em" class="fine">No resumes yet.</p>
+<a class="btn" id="go" href="#job" aria-disabled="true">Continue to job selection</a></section>
+
+<section class="page c" id="job"><h2>Target job</h2>
+<div class="card"><label for="role">Predefined role or custom job description</label><select id="role"></select>
+<div id="jdbox" hidden><label for="jd">Paste the job description</label><textarea id="jd" style="min-height:160px"></textarea><button class="btn" id="ex">Extract requirements</button><p class="fine">Extraction recognizes ~60 common skills. Add anything it missed below. Nothing here assumes a degree, certification, or years of experience unless the posting states it.</p></div></div>
+<div class="card"><h3>Confirm or edit requirements</h3>
+<label for="jt">Job title</label><input type="text" id="jt" maxlength="80">
+<label for="re">Essential skills (comma-separated)</label><input type="text" id="re">
+<label for="rp">Preferred skills (comma-separated)</label><input type="text" id="rp">
+<div class="grid"><div><label for="ry">Minimum years of experience (0 = none stated)</label><input type="number" id="ry" min="0" max="30" value="0"></div>
+<div><label for="rd">Education keywords (comma-separated, blank = none required)</label><input type="text" id="rd" placeholder="e.g. computer science, bachelor"></div></div>
+<label for="rr">Responsibilities (optional, one per line)</label><textarea id="rr"></textarea></div>
+<details class="card"><summary><b>Scoring weights</b> (configurable; need not sum to 100, they are normalized)</summary><div class="grid" id="wg"></div></details>
+<p id="jerr" class="bad badge" role="alert" hidden></p>
+<button class="btn" id="an">Analyze resumes</button></section>
+
+<section class="page c" id="results"><div id="rv"></div></section>
+<section class="page c" id="compare"><div id="cv"></div></section>
+<section class="page c" id="report"><div id="pv"></div></section>
+<section class="page c" id="delete"><h2>Delete my data</h2><div class="card"><p>Your resumes exist only in this browser tab’s memory. Nothing was uploaded to a server.</p><button class="btn" id="wipe">Delete all resumes and results now</button><p id="wm" class="fine" role="status"></p><p class="fine">Closing or reloading the tab also erases everything.</p></div></section>
+<section class="page c" id="legal"></section>
+</main>
+
+<footer><div class="c"><p><b id="bn"></b> · <span id="ba"></span> · <a id="be"></a></p>
+<a href="#privacy">Privacy</a><a href="#cookies">Cookie policy</a><a href="#terms">Terms</a><a href="#refund">Refund policy</a><button id="cp">Cookie preferences</button></div></footer>
+
+<div id="cb" role="dialog" aria-labelledby="ct" hidden><h2 id="ct" style="font-size:1.1rem;margin:0 0 6px">Cookies and storage</h2>
+<p>ResumeIQ sets no cookies and uses no analytics or ad trackers. We only remember this choice and your light/night preference in your browser. See the <a href="#cookies">cookie policy</a>.</p>
+<label class="chk"><input type="checkbox" checked disabled> Essential (this choice). Always on.</label>
+<label class="chk"><input type="checkbox" disabled> Analytics. Not used in this version.</label>
+<button class="btn" id="ca">OK, got it</button></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+<script>
+// ---- Business details: replace with your real details ----
+const BIZ={name:"[Your business name]",address:"[Your registered address]",email:"[your-contact-email]"};
+const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const cut=s=>s.length>120?s.slice(0,117)+"…":s;
+// ---- Skill dictionary (editable) ----
+const SK={python:["python"],java:["java"],javascript:["javascript","js","es6"],typescript:["typescript"],html:["html","html5"],css:["css","css3","sass","tailwind"],react:["react","reactjs","react.js"],angular:["angular"],vue:["vue","vue.js"],"node.js":["node.js","nodejs","express"],django:["django"],flask:["flask"],fastapi:["fastapi"],"rest apis":["rest api","rest apis","restful","api development"],sql:["sql","postgresql","mysql","sqlite","sql server"],postgresql:["postgresql","postgres"],mysql:["mysql"],mongodb:["mongodb","mongo"],git:["git","github","gitlab"],docker:["docker"],kubernetes:["kubernetes","k8s"],aws:["aws","amazon web services","ec2"],azure:["azure"],gcp:["gcp","google cloud"],linux:["linux","ubuntu","bash"],"ci/cd":["ci/cd","cicd","github actions","jenkins","gitlab ci","continuous integration"],testing:["unit test","unit testing","pytest","junit","jest","test cases","selenium"],"data structures":["data structures","dsa"],algorithms:["algorithm","algorithms"],pandas:["pandas"],numpy:["numpy"],"scikit-learn":["scikit-learn","sklearn","scikit learn"],tensorflow:["tensorflow","keras"],pytorch:["pytorch"],"machine learning":["machine learning","ml"],"deep learning":["deep learning","neural network","cnn","lstm"],nlp:["nlp","natural language processing"],statistics:["statistics","statistical","hypothesis testing","regression"],excel:["excel","spreadsheets"],"power bi":["power bi","powerbi"],tableau:["tableau"],"data visualization":["data visualization","data visualisation","matplotlib","seaborn","dashboard","dashboards"],kotlin:["kotlin"],android:["android","android studio"],figma:["figma"],"user research":["user research","usability testing","user interviews","personas"],wireframing:["wireframe","wireframes","wireframing"],prototyping:["prototype","prototyping","prototypes"],roadmap:["roadmap","prioritization","prioritisation"],agile:["agile","scrum","kanban","sprint"],"stakeholder management":["stakeholder","stakeholders"],networking:["networking","tcp/ip","dns","firewall","wireshark"],siem:["siem","splunk","qradar"],"penetration testing":["penetration testing","pentest","burp suite","owasp"],"incident response":["incident response","threat detection"],terraform:["terraform"],jenkins:["jenkins"],llm:["llm","llms","large language model","openai","langchain","rag"]};
+const REL={django:["flask","fastapi"],flask:["django","fastapi"],fastapi:["flask","django"],react:["angular","vue"],angular:["react","vue"],vue:["react","angular"],postgresql:["mysql","sql"],mysql:["postgresql","sql"],aws:["azure","gcp"],azure:["aws","gcp"],gcp:["aws","azure"],tensorflow:["pytorch"],pytorch:["tensorflow"],"power bi":["tableau"],tableau:["power bi"],"ci/cd":["jenkins","git"],kubernetes:["docker"],"deep learning":["machine learning"]};
+// ---- Role requirements (editable data) ----
+const ROLES={"Python Developer":[["python","rest apis","sql","git"],["django","flask","fastapi","docker","testing"]],"Frontend Developer":[["html","css","javascript","react","git"],["typescript","testing","figma","rest apis"]],"Backend Developer":[["sql","rest apis","git","data structures"],["python","java","node.js","docker","postgresql","mongodb","aws"]],"Full-Stack Developer":[["html","css","javascript","sql","rest apis","git"],["react","node.js","docker","typescript"]],"Software Engineer":[["data structures","algorithms","git","testing"],["python","java","sql","docker","agile"]],"Data Analyst":[["sql","excel","data visualization","statistics"],["python","pandas","power bi","tableau"]],"Data Scientist":[["python","pandas","numpy","statistics","machine learning","sql"],["scikit-learn","tensorflow","pytorch","data visualization"]],"Machine Learning Engineer":[["python","machine learning","scikit-learn","git"],["tensorflow","pytorch","docker","deep learning","aws"]],"AI Engineer":[["python","machine learning","deep learning","llm"],["nlp","pytorch","tensorflow","fastapi","docker"]],"Cybersecurity Analyst":[["networking","linux","siem","incident response"],["penetration testing","python","aws"]],"DevOps Engineer":[["linux","docker","ci/cd","git"],["kubernetes","terraform","aws","jenkins","python"]],"Cloud Engineer":[["aws","linux","networking"],["azure","gcp","terraform","kubernetes","docker"]],"Android Developer":[["kotlin","android","git"],["java","rest apis","testing"]],"UI/UX Designer":[["figma","wireframing","prototyping","user research"],["html","css","agile"]],"Product Manager":[["roadmap","stakeholder management","agile","user research"],["sql","data visualization","excel"]]};
+const S={res:[],out:[],req:null,W:{skills:40,proj:25,exp:15,edu:10,qual:10}};
+const WL={skills:"Skills",proj:"Projects & practical experience",exp:"Experience requirement",edu:"Education & certifications",qual:"Resume clarity"};
+const aliases=n=>SK[n]||[n.toLowerCase()];
+const reg=n=>new RegExp("(^|[^a-z0-9+#.])("+aliases(n).map(a=>a.replace(/[.*+?^${}()|[\]\\\/]/g,"\\$&")).join("|")+")(?![a-z0-9+#])","i");
+const list=v=>v.split(",").map(x=>x.trim().toLowerCase()).filter(Boolean).filter((x,i,a)=>a.indexOf(x)==i);
+
+// ---- Routing ----
+const LEG=["privacy","cookies","terms","refund"];
+function route(){let h=location.hash.slice(1)||"home";if(LEG.includes(h)){legal(h);h="legal"}if(!$("#"+h)||h=="main")h="home";
+ document.querySelectorAll(".page").forEach(p=>p.classList.toggle("on",p.id==h));
+ document.querySelectorAll("header nav a").forEach(a=>a.toggleAttribute("aria-current",a.getAttribute("href")=="#"+h));
+ if(h=="results")renderResults();if(h=="compare")renderCompare();if(h=="report")renderReport();window.scrollTo(0,0)}
+addEventListener("hashchange",route);
+
+// ---- Legal pages (drafts: have a lawyer review) ----
+function legal(k){const T={privacy:`<h2>Privacy policy</h2><p class="note">Draft template: have it reviewed by a qualified lawyer for your country (e.g. GDPR, India’s DPDP Act).</p><h3>Who we are</h3><p>${esc(BIZ.name)}, ${esc(BIZ.address)}, ${esc(BIZ.email)}.</p><h3>What is processed</h3><p>Only the resume files or text you add. They are read and analyzed inside your browser and are never sent to our servers or any third party. No name, email, or account is requested.</p><h3>Retention and deletion</h3><p>Data lives in the tab’s memory and disappears when you close the tab or press “Delete all” on the <a href="#delete">delete page</a>.</p><h3>Fairness</h3><p>Scores use job-related text evidence only, not names, photos, or protected characteristics. Results are estimates for improving resumes, not hiring decisions.</p><h3>Children</h3><p>For people 18 and over. We do not knowingly collect children’s data.</p><h3>Third parties</h3><p>The page loads two open-source libraries (pdf.js, mammoth) from cdnjs.cloudflare.com to read PDF and DOCX files. That host can see your IP address as for any web resource; your resume content is not sent to it.</p>`,
+cookies:`<h2>Cookie policy</h2><p class="note">Draft template. Update before adding analytics or other tools.</p><p>ResumeIQ sets <b>no cookies</b>. It may store up to two items in your browser’s local storage: <code>resumeiq_consent</code> (you closed the notice) and <code>resumeiq_theme</code> (your light or night choice). No analytics, advertising, or social trackers are used. If added later, they will be off until you opt in. Change your choice anytime via “Cookie preferences” in the footer.</p>`,
+terms:`<h2>Terms and conditions</h2><p class="note">Draft template: have it reviewed by a qualified lawyer.</p><ol><li><b>Service.</b> Operated by ${esc(BIZ.name)} (${esc(BIZ.address)}). Provides an estimated comparison of a resume against stated job requirements.</li><li><b>Not a hiring decision.</b> Results are estimates and must not be the sole basis of employment decisions.</li><li><b>Your content.</b> You confirm you may use the files you add and are 18 or older.</li><li><b>Acceptable use.</b> No malware or unlawful content; don’t analyze others’ resumes without permission.</li><li><b>Accuracy.</b> Automated analysis can be wrong. Never add skills you cannot truthfully demonstrate.</li><li><b>Liability.</b> Provided “as is” to the extent permitted by law.</li><li><b>Contact.</b> ${esc(BIZ.email)}</li></ol>`,
+refund:`<h2>Refund policy</h2><p>ResumeIQ is currently free, so no payments are taken and no refunds apply. If paid plans are introduced, this policy will be updated first with clear refund terms shown before purchase.</p>`};
+ $("#legal").innerHTML=`<div class="card">${T[k]}</div>`}
+
+// ---- Upload ----
+const okc=()=>$("#c1").checked&&$("#c2").checked;
+function sync(){const o=okc();$("#fi").disabled=!o;$("#pb").disabled=!o;$("#drop").classList.toggle("off",!o);$("#dh").textContent=o?"PDF or DOCX only.":"Tick both boxes above to enable uploading."}
+$("#c1").onchange=$("#c2").onchange=sync;sync();
+function renderFiles(){const ul=$("#fl");ul.replaceChildren();S.res.forEach((r,i)=>{const li=document.createElement("li");
+ li.innerHTML=`<b>${esc(r.name)}</b> <span class="badge ${r.st=="Ready"?"ok":r.st=="Processing…"?"nb":"bad"}">${r.st}</span><div class="fine">${esc(r.msg||"")}</div>${r.text?`<details><summary>Preview extracted text (${r.text.split(/\s+/).length} words)</summary><pre></pre></details>`:""}`;
+ if(r.text)li.querySelector("pre").textContent=r.text.slice(0,4000);
+ const b=document.createElement("button");b.className="btn s";b.textContent="Remove";b.setAttribute("aria-label","Remove "+r.name);b.onclick=()=>{S.res.splice(i,1);S.out=[];renderFiles()};li.append(b);ul.append(li)});
+ $("#em").hidden=S.res.length>0;const ready=S.res.some(r=>r.st=="Ready");$("#go").setAttribute("aria-disabled",!ready);$("#go").style.opacity=ready?1:.5}
+$("#go").onclick=e=>{if($("#go").getAttribute("aria-disabled")=="true"){e.preventDefault();$("#st").textContent="Add at least one readable resume first."}};
+async function readPdf(buf){pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js";
+ const d=await pdfjsLib.getDocument({data:buf}).promise;let out="";
+ for(let p=1;p<=Math.min(d.numPages,10);p++){const t=await(await d.getPage(p)).getTextContent();let y=null;
+  for(const it of t.items){const ny=it.transform[5];if(y!==null&&Math.abs(ny-y)>3)out+="\n";else if(y!==null)out+=" ";out+=it.str;y=ny}out+="\n"}return out}
+async function addFile(f){const r={name:f.name.slice(0,100),st:"Processing…",msg:"",text:""};S.res.push(r);renderFiles();
+ try{const ext=(f.name.match(/\.[^.]+$/)||[""])[0].toLowerCase();
+  if(![".pdf",".docx"].includes(ext))throw"Unsupported type. Please use PDF or DOCX.";
+  if(!f.size)throw"This file is empty.";if(f.size>5*1048576)throw"File is larger than 5 MB.";
+  const buf=await f.arrayBuffer(),u=new Uint8Array(buf),hd=String.fromCharCode(...u.slice(0,5));
+  if(ext==".pdf"&&!hd.startsWith("%PDF-"))throw"Not a valid PDF despite the .pdf name.";
+  if(ext==".docx"&&!hd.startsWith("PK"))throw"Not a valid .docx (old .doc files are not supported).";
+  let t;try{t=ext==".pdf"?await readPdf(buf):(await mammoth.extractRawText({arrayBuffer:buf})).value}catch(e){throw"Could not read this file; it may be corrupted or password-protected."}
+  if(t.replace(/\s/g,"").length<100)throw ext==".pdf"?"Very little text found. This looks like a scanned PDF. Browser OCR isn’t included; paste the text below or export a text-based PDF.":"Almost no text found in this document.";
+  r.text=t.trim();r.st="Ready";r.msg="Text extracted. Check the preview for accuracy."}
+ catch(e){r.st="Rejected";r.msg=String(e)}renderFiles()}
+async function addMany(fs){const a=[...fs];if(S.res.length+a.length>5){$("#st").textContent="Please keep to 5 resumes at a time.";return}S.out=[];for(const f of a)await addFile(f);$("#st").textContent=S.res.filter(r=>r.st=="Ready").length+" resume(s) ready."}
+$("#fi").onchange=e=>{addMany(e.target.files);e.target.value=""};
+$("#drop").ondragover=e=>{e.preventDefault()};$("#drop").ondrop=e=>{e.preventDefault();if(okc())addMany(e.dataTransfer.files)};
+$("#pb").onclick=()=>{const t=$("#pt").value.trim();if(t.replace(/\s/g,"").length<100){$("#st").textContent="Pasted text is too short to analyze (need ~100+ characters).";return}
+ if(S.res.length>=5){$("#st").textContent="Please keep to 5 resumes.";return}S.res.push({name:$("#pn").value.slice(0,60)||"Pasted resume",st:"Ready",msg:"Pasted text.",text:t});$("#pt").value="";S.out=[];renderFiles()};
+
+// ---- Job selection ----
+const rs=$("#role");rs.innerHTML=Object.keys(ROLES).map(r=>`<option>${esc(r)}</option>`).join("")+"<option value='__c'>Custom job description…</option>";
+$("#wg").innerHTML=Object.keys(WL).map(k=>`<div><label for="w_${k}">${WL[k]} (%)</label><input type="number" id="w_${k}" min="0" max="100" value="${S.W[k]}"></div>`).join("");
+function loadRole(){const v=rs.value;$("#jdbox").hidden=v!="__c";if(v=="__c")return;const [e,p]=ROLES[v];$("#jt").value=v;$("#re").value=e.join(", ");$("#rp").value=p.join(", ");$("#ry").value=0;$("#rd").value="";$("#rr").value=""}
+rs.onchange=loadRole;loadRole();
+$("#ex").onclick=()=>{const t=$("#jd").value;if(t.trim().length<80){showErr("The job description is too short to extract requirements from. Paste the full posting.");return}showErr("");
+ const E=[],P=[];let head=false;const lines=t.split(/\n/),resp=[];let inResp=false;
+ for(const l of lines){const short=l.trim().length<60;if(short&&/preferred|nice to have|bonus|good to have/i.test(l))head=true;else if(short&&/required|requirements|must have|qualifications|responsibilit|what you/i.test(l))head=false;
+  if(short&&/responsibilit|what you.ll do|you will/i.test(l))inResp=true;else if(short&&/required|requirements|qualifications|preferred|benefits/i.test(l))inResp=false;else if(inResp&&l.trim())resp.push(l.replace(/^[\s•\-*·]+/,"").trim());
+  const pf=head||/preferred|nice to have|bonus|good to have/i.test(l);
+  for(const n in SK)if(reg(n).test(l)&&!E.includes(n)&&!P.includes(n))(pf?P:E).push(n)}
+ const ym=t.match(/(\d+)\+?\s*(?:years|yrs)/i);const ed=[...new Set((t.toLowerCase().match(/b\.?tech|bachelor|master|m\.?tech|ph\.?d|diploma|degree/g)||[]))];
+ $("#jt").value=$("#jt").value||"Custom role";$("#re").value=E.join(", ");$("#rp").value=P.join(", ");$("#ry").value=ym?ym[1]:0;$("#rd").value=ed.join(", ");$("#rr").value=resp.slice(0,10).join("\n");
+ S.jd=t;if(!E.length&&!P.length)showErr("No known skills were detected. Please type the requirements manually below.")};
+const showErr=m=>{$("#jerr").hidden=!m;$("#jerr").textContent=m};
+
+// ---- Analysis engine (deterministic; no AI) ----
+const H=[[/^(technical )?skills?( summary)?$|^core competencies$|^technologies$/,"skills"],[/^(academic |personal |key )?projects?$/,"projects"],[/^((work|professional) )?experience$|^internships?$|^work history$|^employment( history)?$/,"exp"],[/^education( and qualifications)?$|^academics?$/,"edu"],[/^(professional )?(summary|profile|objective|about me|career objective)$/,"summary"],[/^certifications?$|^achievements?$|^awards$/,"cert"]];
+function parse(text){let cur={t:"other",lines:[]};const s=[cur];for(const raw of text.split(/\r?\n/)){const l=raw.trim();if(!l)continue;
+ const m=l.length<45&&l.replace(/[:\-–_|]/g,"").trim().toLowerCase(),h=m&&H.find(x=>x[0].test(m));if(h){cur={t:h[1],lines:[]};s.push(cur)}else cur.lines.push(l)}return s}
+const PTS={"Demonstrated":1,"Partially demonstrated":.6,"Mentioned but not demonstrated":.4,"Not found in resume":0};
+const VERBS=/^(built|developed|designed|implemented|created|led|analy[sz]ed|optimi[sz]ed|automated|deployed|managed|improved|wrote|tested|integrated|reduced|increased|launched|collaborated|engineered|trained|visuali[sz]ed|migrated|configured|researched)\b/i;
+function analyze(text,q){const secs=parse(text),by=t=>secs.filter(s=>s.t==t).flatMap(s=>s.lines);
+ const proj=by("projects"),exp=by("exp"),skl=by("skills"),edu=by("edu"),rest=[...by("summary"),...by("other"),...by("cert")],pe=[...proj,...exp];
+ const recog=secs.filter(s=>s.t!="other").length;const find=(L,n)=>L.find(l=>reg(n).test(l));const rows=[];
+ const add=(n,imp)=>{let ev=find(proj,n),src="project";if(!ev){ev=find(exp,n);src="experience"}let st,e;
+  if(ev){st="Demonstrated";e=`In ${src}: “${cut(ev)}”`}else if(ev=find(rest,n)){st="Partially demonstrated";e=`Mentioned outside projects/experience: “${cut(ev)}”`}
+  else if(find(skl,n)){st="Mentioned but not demonstrated";e="Appears only in the skills list."}
+  else{st="Not found in resume";const rl=(REL[n]||[]).filter(x=>reg(x).test(text));e=rl.length?`Related, not equivalent: ${rl.join(", ")}`:"No mention found."}
+  rows.push({n,imp,st,e})};
+ q.E.forEach(n=>add(n,"Essential"));q.P.forEach(n=>add(n,"Preferred"));
+ const cats={},notes=[];
+ // Skills: essential weight 2, preferred weight 1; points per status above
+ let sw=0,sp=0;rows.forEach(r=>{const w=r.imp=="Essential"?2:1;sw+=w;sp+=w*PTS[r.st]});
+ cats.skills={s:sw?100*sp/sw:null,n:"Essential skills count double; Demonstrated=1, Partial=0.6, Mentioned only=0.4, Not found=0."+(sw?"":" No skills defined, so not scored.")};
+ // Projects
+ if(!pe.length){cats.proj={s:recog>0?0:null,n:recog>0?"No project or experience lines found under recognized headings.":"No Projects/Experience headings recognized, so this could not be fairly scored. Use standard headings."}}
+ else{const dem=rows.length?rows.filter(r=>r.st=="Demonstrated").length/rows.length:0,met=Math.min(1,pe.filter(l=>/\d/.test(l)).length/3),det=Math.min(1,pe.length/6);
+  cats.proj={s:100*(.6*dem+.25*met+.15*det),n:`60% share of required/preferred skills shown in projects/experience (${Math.round(dem*100)}%), 25% lines with numbers (${pe.filter(l=>/\d/.test(l)).length} of 3 needed), 15% amount of detail (${pe.length} lines of 6).`}}
+ // Experience
+ let yrs=0;(text.match(/(\d+(?:\.\d+)?)\+?\s*years?/gi)||[]).forEach(m=>yrs=Math.max(yrs,parseFloat(m)));let rg=0;
+ exp.join("\n").replace(/((?:19|20)\d\d)\s*(?:-|–|to)\s*((?:19|20)\d\d|present|current)/gi,(m,a,b)=>{rg+=Math.max(0,(/\d/.test(b)?+b:new Date().getFullYear())-+a)});yrs=Math.max(yrs,rg);
+ cats.exp=q.years>0?{s:Math.min(100,100*yrs/q.years),n:`Job states ${q.years}+ years; about ${yrs} found in the resume (dates or stated years).`}:{s:null,n:"No minimum experience stated, so not scored (entry-level candidates aren’t penalized). Projects/internships count under Projects."};
+ // Education
+ if(!q.edu.length)cats.edu={s:null,n:"No education requirement stated, so not scored."};
+ else{const et=(edu.length?edu.join(" "):text).toLowerCase();const hit=q.edu.some(k=>et.includes(k));const deg=/b\.?tech|bachelor|b\.?sc|b\.?e\b|master|m\.?tech|m\.?sc|diploma|ph\.?d|degree/i.test(et);
+  cats.edu=hit?{s:100,n:"Education text matches a stated keyword."}:deg?{s:60,n:"A degree is listed but doesn’t match the stated keywords; this does not rule you out."}:{s:40,n:"No education details found in the resume text."}}
+ // Quality
+ const wc=text.split(/\s+/).length,pl=pe.map(l=>l.replace(/^[\s•\-*·]+/,""));
+ const chk=[["Email address present",/\S+@\S+\.\S+/.test(text),"Add a professional email."],["Phone number present",/\+?\d[\d\s\-()]{8,}\d/.test(text),"Add a phone number."],["Skills section found",skl.length>0,"Add a clearly titled “Skills” section."],["Projects or experience section found",pe.length>0,"Add “Projects” or “Experience” headings so tools can parse them."],["Education section found",edu.length>0,"Add a clearly titled “Education” section."],["Action verbs used in bullets (3+)",pl.filter(l=>VERBS.test(l)).length>=3,"Start project/experience bullets with action verbs (Built, Designed, Analyzed…)."],["Measurable details (2+ lines with numbers)",pe.filter(l=>/\d/.test(l)).length>=2,"Where true and verifiable, add numbers (users, data size, time saved)."],["Reasonable length (200–1000 words)",wc>=200&&wc<=1000,"Aim for roughly one to two pages."],["Line structure preserved (10+ lines)",text.split(/\n/).filter(l=>l.trim()).length>=10,"Text came out as few lines; the layout (columns, tables) may confuse ATS parsers."]];
+ cats.qual={s:100*chk.filter(c=>c[1]).length/chk.length,n:`${chk.filter(c=>c[1]).length} of ${chk.length} basic checks passed. This is a generic check, not any specific ATS’s behavior.`};
+ // Overall (weights renormalized across scored categories)
+ let tw=0,ts=0;for(const k in cats)if(cats[k].s!==null){tw+=S.W[k];ts+=S.W[k]*cats[k].s}
+ for(const k in cats)cats[k].w=cats[k].s!==null&&tw?Math.round(1000*S.W[k]/tw)/10:0;
+ const overall=tw?Math.round(ts/tw):0;
+ const label=overall>=75?"Strong documented match":overall>=55?"Moderate documented match":overall>=35?"Partial documented match":"Limited documented match";
+ const cnt=s=>rows.filter(r=>s.includes(r.st)).length;
+ return{rows,cats,overall,label,m:cnt(["Demonstrated"]),p:cnt(["Partially demonstrated","Mentioned but not demonstrated"]),nf:cnt(["Not found in resume"]),chk,proj,pe,skl,limits:[recog==0?"No standard section headings were detected, so evidence is weaker.":"",rows.length?"":"No skills defined for this job."].filter(Boolean)}}
+
+$("#an").onclick=()=>{const rd=S.res.filter(r=>r.st=="Ready");if(!rd.length){showErr("Add at least one readable resume first (step 1).");return}
+ const E=list($("#re").value),P=list($("#rp").value).filter(x=>!E.includes(x));if(!E.length&&!P.length){showErr("Add at least one skill requirement.");return}
+ const W={};let sum=0;for(const k in WL){W[k]=Math.max(0,+$("#w_"+k).value||0);sum+=W[k]}if(!sum){showErr("At least one weight must be above 0.");return}
+ showErr("");S.W=W;S.req={title:$("#jt").value.trim()||"Target role",E,P,years:Math.max(0,+$("#ry").value||0),edu:list($("#rd").value),resp:$("#rr").value.trim()};
+ S.out=rd.map(r=>({name:r.name,...analyze(r.text,S.req)}));S.sel=0;location.hash="results"};
+
+// ---- Suggestions ----
+function advice(r){const A={h:[],m:[],l:[]};
+ r.rows.forEach(x=>{if(x.st=="Not found in resume"&&x.imp=="Essential")A.h.push(`<b>${esc(x.n)}</b> is an essential requirement and was not found in this resume. <i>If you have used it</i>, add it where it truly applies (a project or internship). <i>If not</i>, treat it as a learning goal: build a small project with it, and list it only once you can explain it.`);
+  else if(x.st=="Mentioned but not demonstrated"||x.st=="Partially demonstrated")(x.imp=="Essential"?A.m:A.m).push(`<b>${esc(x.n)}</b> (${x.imp.toLowerCase()}) is ${x.st=="Partially demonstrated"?"mentioned only outside your projects/experience":"only in your skills list"}. This is a presentation fix: add a bullet saying what you built with it, which features or libraries you used, and any result you can verify.`);
+  else if(x.st=="Not found in resume")A.m.push(`Preferred skill <b>${esc(x.n)}</b> wasn’t found. Optional: learn it only if relevant to your goals, and add it only if you can demonstrate it.`)});
+ const wn=r.pe.find(l=>!/\d/.test(l)&&l.length>30);if(wn)A.m.push(`The line “${esc(cut(wn))}” has no measurable detail. Add verified numbers (users, data size, speed, accuracy) if you have them; otherwise describe the scope clearly.`);
+ r.chk.filter(c=>!c[1]).forEach(c=>A.l.push(`${esc(c[0])}: not met. ${esc(c[2])}`));return A}
+function rewrites(r){const d=r.rows.filter(x=>x.st=="Demonstrated").map(x=>x.n),s=r.rows.filter(x=>x.st=="Mentioned but not demonstrated"||x.st=="Partially demonstrated").map(x=>x.n);
+ const pr=r.proj.slice(0,2);
+ return `<div class="card"><h3>Suggested rewrites (drafts for your approval)</h3><p class="fine">Nothing changes in your resume automatically. Fill the [brackets] only with true facts.</p>
+ <p><b>Professional summary draft:</b><br>${esc(S.req.title)} candidate with hands-on experience in ${esc(d.slice(0,4).join(", ")||"[your demonstrated skills]")}. Built [project or role] that [what it does]. [One verified achievement.] Seeking [role type].</p>
+ <p><b>Skills section draft:</b><br>Demonstrated in projects: ${esc(d.join(", ")||"—")}<br>Familiar (add project evidence first): ${esc(s.join(", ")||"—")}</p>
+ ${pr.length?`<p><b>Project bullet template:</b></p>${pr.map(l=>`<p class="fine">Original: “${esc(cut(l))}”<br>Template: Built [what] using [technology] to [problem solved]; [verified result or scale].</p>`).join("")}`:""}</div>`}
+
+// ---- Views ----
+const sc=s=>s===null?"Not scored":Math.round(s)+"%";const bar=s=>s===null?"":`<div class="bar" role="img" aria-label="${Math.round(s)} percent"><i style="width:${s}%"></i></div>`;
+const bcls=s=>s=="Demonstrated"?"ok":s=="Not found in resume"?"bad":s=="Not applicable"?"nb":"warn";
+function view(i,full){const r=S.out[i],A=advice(r);
+ return `<div class="card"><h2>${esc(r.name)} → ${esc(S.req.title)}</h2><span class="big">${r.overall}%</span><b>${r.label}</b>
+ <p class="fine">Estimated resume-to-job match based only on this resume’s text. It is not the probability of being hired.</p>
+ <p><span class="badge ok">${r.m} matched</span><span class="badge warn">${r.p} partial</span><span class="badge bad">${r.nf} not found</span></p>
+ ${full?`<p><b>Job requirements used:</b> Essential: ${esc(S.req.E.join(", ")||"none")}. Preferred: ${esc(S.req.P.join(", ")||"none")}. Years: ${S.req.years||"none stated"}. Education: ${esc(S.req.edu.join(", ")||"none stated")}.</p>${S.req.resp?`<p><b>Responsibilities:</b> ${esc(S.req.resp.replace(/\n/g,"; "))}</p>`:""}`:""}</div>
+ <div class="card"><h3>Score breakdown</h3><div class="tw"><table><thead><tr><th>Category</th><th>Weight used</th><th>Score</th><th>How it was calculated</th></tr></thead><tbody>${Object.keys(WL).map(k=>{const c=r.cats[k];return `<tr><td>${WL[k]}</td><td>${c.w}%</td><td>${sc(c.s)}${bar(c.s)}</td><td>${esc(c.n)}</td></tr>`}).join("")}</tbody></table></div>
+ <p class="fine">Overall = Σ(score × weight) over scored categories; weights of unscored categories are redistributed, so missing information is neither rewarded nor punished.${r.limits.length?" Limits: "+esc(r.limits.join(" ")):""}</p></div>
+ <div class="card"><h3>Skills analysis</h3><div class="tw"><table><thead><tr><th>Skill</th><th>Importance</th><th>Resume evidence</th><th>Match status</th><th>Recommendation</th></tr></thead><tbody>${r.rows.map(x=>`<tr><td>${esc(x.n)}</td><td>${x.imp}</td><td>${esc(x.e)}</td><td><span class="badge ${bcls(x.st)}">${x.st}</span></td><td>${x.st=="Demonstrated"?"Keep it prominent.":x.st=="Not found in resume"?"Add only if you can truthfully show it; otherwise learn it.":"Add project/experience evidence."}</td></tr>`).join("")||"<tr><td colspan=5>No skills defined.</td></tr>"}</tbody></table></div>
+ <p class="fine">“Not found” means the text doesn’t show it, not that you lack the skill.</p></div>
+ <div class="card"><h3>Prioritized action plan</h3>
+ <h4>High priority: missing essentials</h4>${A.h.map(x=>`<div class="prio p1">${x}</div>`).join("")||"<p>None. All essential skills have some evidence.</p>"}
+ <h4>Medium: show existing skills more clearly</h4>${A.m.map(x=>`<div class="prio p2">${x}</div>`).join("")||"<p>None.</p>"}
+ <h4>Low: formatting and presentation</h4>${A.l.map(x=>`<div class="prio p3">${x}</div>`).join("")||"<p>None.</p>"}</div>${rewrites(r)}`}
+function selector(id,fn){return `<label for="${id}">Resume</label><select id="${id}">${S.out.map((r,i)=>`<option value="${i}" ${i==S.sel?"selected":""}>${esc(r.name)}</option>`).join("")}</select>`}
+const none=()=>`<div class="card"><h2>No analysis yet</h2><p>Complete steps 1 and 2 first. <a href="#upload">Upload a resume</a>.</p></div>`;
+function renderResults(){if(!S.out.length){$("#rv").innerHTML=none();return}$("#rv").innerHTML=`<div class="noprint">${selector("sel1")}</div><div id="rb"></div>`;const f=()=>{S.sel=+$("#sel1").value;$("#rb").innerHTML=view(S.sel,false)};$("#sel1").onchange=f;f()}
+function csvOf(){const q=v=>`"${String(v).replace(/"/g,'""')}"`;const rows=[["Resume","Job","Overall %","Skills %","Projects %","Experience %","Education %","Clarity %","Skill","Importance","Status","Evidence"]];
+ S.out.forEach(r=>{const c=r.cats,b=[r.name,S.req.title,r.overall,...["skills","proj","exp","edu","qual"].map(k=>c[k].s===null?"n/a":Math.round(c[k].s))];r.rows.forEach(x=>rows.push([...b,x.n,x.imp,x.st,x.e]))});return rows.map(r=>r.map(q).join(",")).join("\n")}
+function renderCompare(){if(S.out.length<1){$("#cv").innerHTML=none();return}
+ const o=S.out,sorted=[...o].sort((a,b)=>b.overall-a.overall);
+ let why="Upload two or more resumes to compare them against the same job.";
+ if(o.length>1){const a=sorted[0],b=sorted[1];let k=Object.keys(WL).filter(k=>a.cats[k].s!==null&&b.cats[k].s!==null).sort((x,y)=>(a.cats[y].s-b.cats[y].s)-(a.cats[x].s-b.cats[x].s))[0];
+  why=a.overall==b.overall?`${esc(a.name)} and ${esc(b.name)} have the same estimated score.`:`${esc(a.name)} scores ${a.overall-b.overall} points higher than ${esc(b.name)}, mainly in “${k?WL[k]:"overall evidence"}” (${k?sc(a.cats[k].s)+" vs "+sc(b.cats[k].s):""}). It documents ${a.m} requirements as demonstrated versus ${b.m}.`}
+ $("#cv").innerHTML=`<h2>Resume comparison: ${esc(S.req.title)}</h2><div class="card"><div class="tw"><table><thead><tr><th>Resume</th><th>Overall</th><th>Skill coverage</th><th>Project evidence</th><th>Clarity</th><th>Not found</th><th>Strongest / weakest area</th></tr></thead><tbody>${o.map(r=>{const ks=Object.keys(WL).filter(k=>r.cats[k].s!==null).sort((x,y)=>r.cats[y].s-r.cats[x].s);return `<tr><td>${esc(r.name)}</td><td><b>${r.overall}%</b></td><td>${r.m+r.p} of ${r.rows.length} found (${r.m} demonstrated)</td><td>${sc(r.cats.proj.s)}</td><td>${sc(r.cats.qual.s)}</td><td>${esc(r.rows.filter(x=>x.st=="Not found in resume").map(x=>x.n).join(", ")||"none")}</td><td>${ks.length?WL[ks[0]]+" / "+WL[ks[ks.length-1]]:"—"}</td></tr>`}).join("")}</tbody></table></div></div>
+ <div class="card"><h3>Why the difference?</h3><p>${why}</p><p class="note">This compares documented, job-related evidence in resume text only. It does not show who is the better candidate or employee.</p></div>`}
+function renderReport(){if(!S.out.length){$("#pv").innerHTML=none();return}
+ $("#pv").innerHTML=`<div class="noprint">${selector("sel2")}<p><button class="btn" id="pr">Print / save as PDF</button> <button class="btn s" id="cc">Copy CSV</button></p><p class="fine">If printing is blocked in your viewer, open the page in its own tab first. Choose “Save as PDF” in the print dialog.</p><label for="csv">CSV export (all resumes)</label><textarea id="csv" readonly></textarea></div><div id="rp2"></div>`;
+ $("#csv").value=csvOf();const f=()=>{S.sel=+$("#sel2").value;$("#rp2").innerHTML=view(S.sel,true)+`<p class="fine">Generated by ResumeIQ on ${new Date().toLocaleDateString()}. An estimate for resume improvement, not a hiring decision.</p>`};$("#sel2").onchange=f;f();
+ $("#pr").onclick=()=>window.print();$("#cc").onclick=async()=>{try{await navigator.clipboard.writeText($("#csv").value)}catch{$("#csv").select()}}}
+$("#wipe").onclick=()=>{S.res=[];S.out=[];renderFiles();$("#wm").textContent="All resumes and results were deleted from this tab."};
+
+// ---- Footer + cookie notice ----
+$("#bn").textContent=BIZ.name;$("#ba").textContent=BIZ.address;$("#be").textContent=BIZ.email;$("#be").href="mailto:"+BIZ.email;
+const K="resumeiq_consent",cb=$("#cb");let seen=null;try{seen=localStorage.getItem(K)}catch{}if(!seen)cb.hidden=false;
+$("#ca").onclick=()=>{try{localStorage.setItem(K,"essential-only")}catch{}cb.hidden=true};
+$("#cp").onclick=()=>{cb.hidden=false;$("#ca").focus()};cb.onkeydown=e=>{if(e.key=="Escape")cb.hidden=true};
+const mb=$("#mb"),mn=$("#menu"),th=$("#th"),root=document.documentElement;
+const setMenu=o=>{mn.hidden=!o;mb.setAttribute("aria-expanded",o);mb.textContent=o?"✕ Close":"☰ Menu"};
+mb.onclick=()=>setMenu(mn.hidden);mn.onclick=e=>{if(e.target.closest("a"))setMenu(false)};
+addEventListener("keydown",e=>{if(e.key=="Escape"&&!mn.hidden){setMenu(false);mb.focus()}});
+function setTheme(t,save){root.dataset.theme=t;const d=t=="dark";th.setAttribute("aria-pressed",d);th.textContent=d?"☀️ Light":"🌙 Night";th.setAttribute("aria-label",d?"Switch to light mode":"Switch to night mode");if(save)try{localStorage.setItem("resumeiq_theme",t)}catch{}}
+let tm=null;try{tm=localStorage.getItem("resumeiq_theme")}catch{}
+setTheme(tm||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light"),false);
+th.onclick=()=>setTheme(root.dataset.theme=="dark"?"light":"dark",true);
+renderFiles();route();
+</script>
+</body>
+</html>
